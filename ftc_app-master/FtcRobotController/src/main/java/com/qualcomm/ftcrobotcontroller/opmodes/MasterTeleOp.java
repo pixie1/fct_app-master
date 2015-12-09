@@ -9,28 +9,6 @@ import com.qualcomm.robotcore.util.Range;
  * Created by Karine on 10/27/2015.
  */
 public class MasterTeleOp extends OpMode  {
-    /*
-	 * Note: the configuration of the servos is such that
-	 * as the arm servo approache0,	 t * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
-    the arm position moves up (ahewfromay  fs loor).
-            */
-    // TETRIX VALUES.
-    //final static double ARM_MIN_RANGE  = 0.20;
-    //final static double ARM_MAX_RANGE  = 0.90;
-    // final static double CLAW_MIN_RANGE  = 0.20;
-    // final static double CLAW_MAX_RANGE  = 0.7;
-
-    // position of the arm servo.
-    //   double armPosition;
-
-    // amount to change the arm servo position.
-    // double armDelta = 0.1;
-
-    // position of the claw servo
-    // double clawPosition;
-
-    // amount to change the claw servo position by
-    //  double clawDelta = 0.1;
 
     DcMotor motorRight;
     DcMotor motorLeft;
@@ -95,7 +73,7 @@ public class MasterTeleOp extends OpMode  {
      */
     @Override
     public void loop() {
-
+        //driver#1's controls
         if(gamepad1.y) {                        //this makes it go forward fasr
             motorLeft.setPower(1);
             motorRight.setPower(1);
@@ -129,15 +107,34 @@ public class MasterTeleOp extends OpMode  {
         }else if(gamepad1.dpad_down){
             motor3Dwheel.setPower(-.1);
         }
-
-        
+        //driver#2's controls
+        if(gamepad2.b){
+            climberRed.setPosition(.5);
+        }else if(gamepad2.x){
+            climberRed.setPosition(1);
+        }
+        if(gamepad2.y){
+            hook.setPosition(1);
+        }else if(gamepad2.a){
+            hook.setPosition(0);
+        }else {
+            hook.setPosition(.5);
+        }
+        if(gamepad2.dpad_up){
+            motorHook.setPower(.5);
+        }else if(gamepad2.dpad_down){
+            motorHook.setPower(-.5);
+        }else{
+            motorHook.setPower(0);
+        }
+        }
 
         //this sends information to the driver
-        telemetry.addData("Text", "*** Robot Data***");
+        /*telemetry.addData("Text", "*** Robot Data***");
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
+*/
 
-    }
 
     /*
      * Code to run when the op mode is first disabled goes here
