@@ -11,9 +11,9 @@ import com.qualcomm.robotcore.util.Range;
 public class MasterTeleOp extends OpMode  {
     /*
 	 * Note: the configuration of the servos is such that
-	 * as the arm servo approaches 0, the arm position moves up (away from the floor).
-	 * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
-	 */
+	 * as the arm servo approache0,	 t * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
+    the arm position moves up (ahewfromay  fs loor).
+            */
     // TETRIX VALUES.
     //final static double ARM_MIN_RANGE  = 0.20;
     //final static double ARM_MAX_RANGE  = 0.90;
@@ -34,8 +34,12 @@ public class MasterTeleOp extends OpMode  {
 
     DcMotor motorRight;
     DcMotor motorLeft;
-    // Servo claw;
-    // Servo arm;
+    DcMotor motor3Dwheel;
+    DcMotor motorHook;
+
+    Servo climberBlue;
+    Servo climberRed;
+    Servo hook;
 
     /**
      * Constructor
@@ -71,10 +75,13 @@ public class MasterTeleOp extends OpMode  {
 		 */
         motorRight = hardwareMap.dcMotor.get("motor_2");
         motorLeft = hardwareMap.dcMotor.get("motor_1");
+        motor3Dwheel = hardwareMap.dcMotor.get("motor_3");
+        motorHook = hardwareMap.dcMotor.get("motor_4");
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
-        //  arm = hardwareMap.servo.get("servo_1");
-        //  claw = hardwareMap.servo.get("servo_6");
+          climberRed = hardwareMap.servo.get("servo_6");
+          climberBlue= hardwareMap.servo.get("servo_1");
+        hook= hardwareMap.servo.get("servo_5");
 
         // assign the starting position of the wrist and claw
         //   armPosition = 0.2;
@@ -89,76 +96,44 @@ public class MasterTeleOp extends OpMode  {
     @Override
     public void loop() {
 
-		/*
-		 * Gamepad 1
-		 *
-		 * Gamepad 1 controls the motors via the left stick, and it controls the
-		 * wrist/claw via the a,b, x, y buttons
-		 */
-
-        // throttle: left_stick_y ranges from -1 to 1, where -1 is full up, and
-        // 1 is full down
-        // direction: left_stick_x ranges from -1 to 1, where -1 is full left
-        // and 1 is full right
-        float throttle = -gamepad1.left_stick_y;
-        float direction = gamepad1.left_stick_x;
-        float right = throttle - direction;
-        float left = throttle + direction;
-
-        // clip the right/left values so that the values never exceed +/- 1
-        right = Range.clip(right, -1, 1);
-        left = Range.clip(left, -1, 1);
-
-        // scale the joystick value to make it easier to control
-        // the robot more precisely at slower speeds.
-        right = (float)scaleInput(right);
-        left =  (float)scaleInput(left);
-
-        // write the values to the motors
-        motorRight.setPower(right);
-        motorLeft.setPower(left);
-
-        // update the position of the arm.
-       /* if (gamepad1.a) {
-            // if the A button is pushed on gamepad1, increment the position of
-            // the arm servo.
-            armPosition += armDelta;
+        if(gamepad1.y) {                        //this makes it go forward fasr
+            motorLeft.setPower(1);
+            motorRight.setPower(1);
+        }else if(gamepad1.a) {                  //this makes it go backwards fast
+            motorLeft.setPower(-1);
+            motorRight.setPower(-1);
+        }else if(gamepad1.x){                   //this makes it go forward slow
+            motorLeft.setPower(.2);
+            motorRight.setPower(.2);
+        }else if(gamepad1.b){                   //this makes it go backwards slow
+            motorLeft.setPower(-.2);
+            motorRight.setPower(-.2);
+        }else if(gamepad1.left_bumper){         //this makes it turn cc fast
+            motorLeft.setPower(-1);
+            motorRight.setPower(1);
+        }else if(gamepad1.right_bumper){        //this makes it turn c fast
+            motorLeft.setPower(1);
+            motorRight.setPower(-1);
+        }else if(gamepad1.left_trigger>0){      // this makes it turn cc slow
+            motorLeft.setPower(-.2);
+            motorRight.setPower(.2);
+        }else if(gamepad1.right_trigger>0){     //this makes it turn c slow
+            motorLeft.setPower(.2);
+            motorRight.setPower(-.2);
+        }else {
+            motorRight.setPower(0);
+            motorLeft.setPower(0);
+        }
+        if(gamepad1.dpad_up){
+            motor3Dwheel.setPower(.1);
+        }else if(gamepad1.dpad_down){
+            motor3Dwheel.setPower(-.1);
         }
 
-        if (gamepad1.y) {
-            // if the Y button is pushed on gamepad1, decrease the position of
-            // the arm servo.
-            armPosition -= armDelta;
-        }
+        
 
-        // update the position of the claw
-        if (gamepad1.x) {
-            clawPosition += clawDelta;
-        }
-
-        if (gamepad1.b) {
-            clawPosition -= clawDelta;
-        }*/
-
-        // clip the position values so that they never exceed their allowed range.
-        //   armPosition = Range.clip(armPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
-        //   clawPosition = Range.clip(clawPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
-
-        // write position values to the wrist and claw servo
-        //  arm.setPosition(armPosition);
-        //  claw.setPosition(clawPosition);
-
-
-
-		/*
-		 * Send telemetry data back to driver station. Note that if we are using
-		 * a legacy NXT-compatible motor controller, then the getPower() method
-		 * will return a null value. The legacy NXT-compatible motor controllers
-		 * are currently write only.
-		 */
+        //this sends information to the driver
         telemetry.addData("Text", "*** Robot Data***");
-        //   telemetry.addData("arm", "arm:  " + String.format("%.2f", armPosition));
-        //   telemetry.addData("claw", "claw:  " + String.format("%.2f", clawPosition));
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
 
