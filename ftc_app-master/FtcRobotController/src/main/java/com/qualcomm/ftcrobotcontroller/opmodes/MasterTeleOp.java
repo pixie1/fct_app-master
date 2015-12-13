@@ -3,6 +3,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.robocol.Telemetry;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -35,35 +36,18 @@ public class MasterTeleOp extends OpMode  {
     public void init() {
 
 
-		/*
-		 * Use the hardwareMap to get the dc motors and servos by name. Note
-		 * that the names of the devices must match the names used when you
-		 * configured your robot and created the configuration file.
-		 */
-
-		/*
-		 * For the demo Tetrix K9 bot we assume the following,
-		 *   There are two motors "motor_1" and "motor_2"
-		 *   "motor_1" is on the right side of the bot.
-		 *   "motor_2" is on the left side of the bot and reversed.
-		 *
-		 * We also assume that there are two servos "servo_1" and "servo_6"
-		 *    "servo_1" controls the arm joint of the manipulator.
-		 *    "servo_6" controls the claw joint of the manipulator.
-		 */
+		//this is where we define all of the motors on the robot.
         motorRight = hardwareMap.dcMotor.get("motor_2");
         motorLeft = hardwareMap.dcMotor.get("motor_1");
         motor3Dwheel = hardwareMap.dcMotor.get("motor_3");
         motorHook = hardwareMap.dcMotor.get("motor_4");
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
-
-          climberRed = hardwareMap.servo.get("servo_6");
-          climberBlue= hardwareMap.servo.get("servo_1");
+        //this is where we define the servos
+        climberRed = hardwareMap.servo.get("servo_6");
+        climberBlue= hardwareMap.servo.get("servo_1");
         hook= hardwareMap.servo.get("servo_5");
-
-        // assign the starting position of the wrist and claw
-        //   armPosition = 0.2;
-        //   clawPosition = 0.2;
+        //we set this servo into its correct starting position.
+        climberBlue.setPosition(1);
     }
 
     /*
@@ -74,58 +58,64 @@ public class MasterTeleOp extends OpMode  {
     @Override
     public void loop() {
         //driver#1's controls
-        if(gamepad1.y) {                        //this makes it go forward fasr
+        if (gamepad1.y) {                        //this makes it go forward fasr
             motorLeft.setPower(1);
             motorRight.setPower(1);
-        }else if(gamepad1.a) {                  //this makes it go backwards fast
+        } else if (gamepad1.a) {                  //this makes it go backwards fast
             motorLeft.setPower(-1);
             motorRight.setPower(-1);
-        }else if(gamepad1.x){                   //this makes it go forward slow
+        } else if (gamepad1.x) {                   //this makes it go forward slow
             motorLeft.setPower(.2);
             motorRight.setPower(.2);
-        }else if(gamepad1.b){                   //this makes it go backwards slow
+        } else if (gamepad1.b) {                   //this makes it go backwards slow
             motorLeft.setPower(-.2);
             motorRight.setPower(-.2);
-        }else if(gamepad1.left_bumper){         //this makes it turn cc fast
+        } else if (gamepad1.left_bumper) {         //this makes it turn cc fast
             motorLeft.setPower(-1);
             motorRight.setPower(1);
-        }else if(gamepad1.right_bumper){        //this makes it turn c fast
+        } else if (gamepad1.right_bumper) {        //this makes it turn c fast
             motorLeft.setPower(1);
             motorRight.setPower(-1);
-        }else if(gamepad1.left_trigger>0){      // this makes it turn cc slow
+        } else if (gamepad1.left_trigger > 0) {      // this makes it turn cc slow
             motorLeft.setPower(-.2);
             motorRight.setPower(.2);
-        }else if(gamepad1.right_trigger>0){     //this makes it turn c slow
+        } else if (gamepad1.right_trigger > 0) {     //this makes it turn c slow
             motorLeft.setPower(.2);
             motorRight.setPower(-.2);
-        }else {
+        } else {
             motorRight.setPower(0);
             motorLeft.setPower(0);
         }
-        if(gamepad1.dpad_up){
+        if (gamepad1.dpad_up) {
             motor3Dwheel.setPower(.1);
-        }else if(gamepad1.dpad_down){
+        } else if (gamepad1.dpad_down) {
             motor3Dwheel.setPower(-.1);
+        }else {
+            motor3Dwheel.setPower(0);
         }
         //driver#2's controls
-        if(gamepad2.b){
-            climberRed.setPosition(.5);
-        }else if(gamepad2.x){
-            climberRed.setPosition(1);
-        }
-        if(gamepad2.y){
-            hook.setPosition(1);
-        }else if(gamepad2.a){
-            hook.setPosition(0);
-        }else {
+        if (gamepad2.b) {
+            climberRed.setPosition(.8);
+        } else if (gamepad2.x) {
+            climberRed.setPosition(.1);
+        }  
+        if (gamepad2.y) {
+            hook.setPosition(0.1);
+        } else if (gamepad2.a) {
+            hook.setPosition(0.9);
+        } else {
             hook.setPosition(.5);
         }
-        if(gamepad2.dpad_up){
-            motorHook.setPower(.5);
-        }else if(gamepad2.dpad_down){
-            motorHook.setPower(-.5);
-        }else{
+        if (gamepad2.dpad_up) {
+            motorHook.setPower(-.25);
+        } else if (gamepad2.dpad_down) {
+            motorHook.setPower(.2);
+        } else {
             motorHook.setPower(0);
+        }
+        int x = 666;
+        if(gamepad1.y) {
+            telemetry.addData("jeff", x);
         }
         }
 
