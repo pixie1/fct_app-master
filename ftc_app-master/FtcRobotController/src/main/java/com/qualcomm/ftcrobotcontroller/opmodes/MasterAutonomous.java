@@ -24,7 +24,7 @@ public class MasterAutonomous extends MasterTelemetry
      *
      * The system calls this member when the class is instantiated.
      */
-    public MasterAutonomous ()
+    public MasterAutonomous()
 
     {
         //
