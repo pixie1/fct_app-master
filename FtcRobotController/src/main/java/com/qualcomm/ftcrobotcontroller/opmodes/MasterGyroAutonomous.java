@@ -47,48 +47,48 @@ public class MasterGyroAutonomous extends LinearOpMode {
     GyroSensor sensorGyro;
     DcMotor motorRight;
     DcMotor motorLeft;
+
     @Override
     public void runOpMode() throws InterruptedException {
-
-        //Make sure the robot knows that the motors are there.
-        motorLeft = hardwareMap.dcMotor.get("motor_1");
-        motorRight = hardwareMap.dcMotor.get("motor_2");
-        motorLeft.setDirection(DcMotor.Direction.REVERSE);//makes the robot run straight.
-        ModernRoboticsI2cGyro sensorGyro = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gyro");
+        sensorGyro.calibrate();                motorRight = hardwareMap.dcMotor.get("motor_2");
+        wait(100);
+                                        motorLeft
+        .setDirection(DcMotor.Direction.REVERSE);//makes the robot run straight.
+        ModernRoboticsI2cGyro sensorGyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
         // wait for fcs to start the match
         waitForStart();
-
-        turnCC(90, 1);
+        turn(90, .5);
+        turn(270, .1);
+        turn(0, 1);
     }
 
-    void gyroTurn(int degrees,double speed){
+    void gyroTurn(int degrees, double speed) {
 
     }
-    int angleToEncoderTicks(double turnAmount)
-    {
-        double s = ((turnAmount)/360*(2*Math.PI))*(17.51/2);
-        double cir = 5*Math.PI;
-        double numOfRotations = s/cir;
-        Double encoderTicks = numOfRotations*1440;
+
+    int angleToEncoderTicks(double turnAmount) {
+        double s = ((turnAmount) / 360 * (2 * Math.PI)) * (17.51 / 2);
+        double cir = 5 * Math.PI;
+        double numOfRotations = s / cir;
+        Double encoderTicks = numOfRotations * 1440;
         int returnEncoderTicks = encoderTicks.intValue();
         return returnEncoderTicks;
     }
 
-    int cmToEncoderTicks(double cm){
-        double d = 2.54*5;
+    int cmToEncoderTicks(double cm) {
+        double d = 2.54 * 5;
         double pi = 3.1415;
         double encoderConstant = 1440;
-        double rotationConstant = d*pi;
-        Double doubleEncoderTicks = (cm*(1/rotationConstant))*encoderConstant;
-        int encoderTicks= doubleEncoderTicks.intValue();
+        double rotationConstant = d * pi;
+        Double doubleEncoderTicks = (cm * (1 / rotationConstant)) * encoderConstant;
+        int encoderTicks = doubleEncoderTicks.intValue();
 
         return encoderTicks;
     }
 
-    void forward(double disInCm, double speed)
-    {
+    void forward(double disInCm, double speed) {
         int disInEncoderTicks = cmToEncoderTicks(disInCm);
-        while(motorLeft.getCurrentPosition()<disInEncoderTicks){
+        while (motorLeft.getCurrentPosition() < disInEncoderTicks) {
             telemetry.addData("Centimeters:", disInCm);
             telemetry.addData("speed:", speed);
             telemetry.addData("Encoder Ticks:", disInEncoderTicks);
@@ -100,9 +100,21 @@ public class MasterGyroAutonomous extends LinearOpMode {
         motorLeft.setPower(0);
         motorRight.setPower(0);
     }
-    void turnCC(double turnAngle, double speed)
-    {
-        int leftTicks = angleToEncoderTicks(turnAngle);
+
+    void turn(int desHead, double speed){
+        if (desHead <= 180) {
+            while (sensorGyro.getHeading() < desHead) {
+                motorLeft.setPower(speed);
+                motorRight.setPower(-speed);
+            }
+        } else {
+            while (sensorGyro.getHeading() > desHead) {
+                motorLeft.setPower(-speed);
+                motorRight.setPower(speed);
+            }
+            motorRight.setPower(0);
+            motorLeft.setPower(0);
+        /*int leftTicks = angleToEncoderTicks(turnAngle);
         int rightTicks = angleToEncoderTicks(-turnAngle);
         telemetry.addData("Now turning", 6);
         telemetry.addData("leftTicks", leftTicks);
@@ -118,6 +130,7 @@ public class MasterGyroAutonomous extends LinearOpMode {
         motorLeft.setPower(0);
         motorRight.setPower(0);
         motorLeft.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        motorRight.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorRight.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);*/
+        }
     }
 }
