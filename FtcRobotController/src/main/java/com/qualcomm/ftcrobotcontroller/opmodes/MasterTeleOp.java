@@ -19,6 +19,8 @@ public class MasterTeleOp extends OpMode {
     Servo hook;
     boolean wasButtonPressed;
     int hookEncoder;
+    double armLeftAt;
+    double hookPower;
     /**
      * Constructor
      */
@@ -102,22 +104,27 @@ public class MasterTeleOp extends OpMode {
         } else {
             hook.setPosition(.5);
         }
+        double encoderZero = motorHook.getCurrentPosition();
+        double armAngle = ((motorHook.getCurrentPosition()-encoderZero)/3.111)+30;
+        if(armAngle>90){
+            if(wasButtonPressed=false) {
+                if(armLeftAt > armAngle) {
+                    hookPower = hookPower+.1;
+                }else if(armLeftAt<armAngle){
+                    hookPower = hookPower-.1;
+                }
+            }
+        }
         if (gamepad2.dpad_up) {
             motorHook.setPower(-.25);
-            boolean wasButtonPressed = true;
+            wasButtonPressed = true;
+            armLeftAt = armAngle;
         } else if (gamepad2.dpad_down) {
             motorHook.setPower(.2);
-            boolean wasButtonPressed = true;
+            wasButtonPressed = true;
+            armLeftAt = armAngle;
         } else {
-            if(wasButtonPressed==true){
-                hookEncoder=motorHook.getCurrentPosition();
-                wasButtonPressed = false;
-            }
-            if(motorHook.getCurrentPosition()<hookEncoder) {
-                motorHook.setPower(.15);
-            } else if(motorHook.getCurrentPosition()>hookEncoder) {
-                motorHook.setPower(-.15);
-            }
+            wasButtonPressed=false;
         }
         int x = 666;
         if(gamepad1.y) {

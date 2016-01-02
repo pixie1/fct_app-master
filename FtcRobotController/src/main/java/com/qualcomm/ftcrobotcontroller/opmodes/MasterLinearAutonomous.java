@@ -35,9 +35,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
-/**
- * A simple example of a linear op mode that will approach an IR beacon
- */
 public class MasterLinearAutonomous extends LinearOpMode {
 
     final static double MOTOR_POWER = 0.15; // Higher values will cause the robot to move faster
@@ -45,8 +42,6 @@ public class MasterLinearAutonomous extends LinearOpMode {
 
     DcMotor motorRight;
     DcMotor motorLeft;
-
-    //IrSeekerSensor irSeeker;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -56,24 +51,11 @@ public class MasterLinearAutonomous extends LinearOpMode {
         motorRight = hardwareMap.dcMotor.get("motor_2");
         //makes the robot run straight.
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
-
         // wait for fcs to start the match
         waitForStart();
 
-        //forward(20, 1);
-        //forward(40, 1);
         turnCC(90, 1);
     }
-
- /*   int oldAngleToEncoderTicks(int angle){
-        int turningCircleDiameter = 15;
-        int wheelDiameter = 5;
-        double pi = 3.141592653589;
-        double inchToCm = 2.54;
-        double turnAmount = ((angle/360.0)*((turningCircleDiameter*pi)/(wheelDiameter*pi*2)))*inchToCm;
-        telemetry.addData("turnAmount", turnAmount);
-        return cmToEncoderTicks(turnAmount);
-    }*/
 
     int angleToEncoderTicks(double turnAmount)
     {

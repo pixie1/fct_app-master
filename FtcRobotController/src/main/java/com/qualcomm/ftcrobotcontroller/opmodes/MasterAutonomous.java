@@ -24,22 +24,9 @@ public class MasterAutonomous extends MasterTelemetry
      *
      * The system calls this member when the class is instantiated.
      */
-    public MasterAutonomous ()
+    public MasterAutonomous (){
 
-    {
-        //
-        // Initialize base classes.
-        //
-        // All via self-construction.
-
-        //
-        // Initialize class members.
-        //
-        // All via self-construction.
-
-
-
-    } // PushBotAuto
+    }
 
     //--------------------------------------------------------------------------
     //
@@ -50,12 +37,7 @@ public class MasterAutonomous extends MasterTelemetry
      *
      * The system calls this member once when the OpMode is enabled.
      */
-    @Override public void start ()
-
-    {
-        //
-        // Call the PushBotHardware (super/base class) start method.
-        //
+    @Override public void start () {
         super.start ();
 
         //
@@ -63,19 +45,7 @@ public class MasterAutonomous extends MasterTelemetry
         //
         reset_drive_encoders ();
 
-    } // start
-
-    //--------------------------------------------------------------------------
-    //
-    // loop
-    //
-    /**
-     * Implement a state machine that controls the robot during auto-operation.
-     * The state machine uses a class member and encoder input to transition
-     * between states.
-     *
-     * The system calls this member repeatedly while the OpMode is running.
-     */
+    }
     @Override public void loop ()
 
     {
