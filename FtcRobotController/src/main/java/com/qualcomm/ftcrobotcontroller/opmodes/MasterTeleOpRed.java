@@ -7,24 +7,29 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Created by Karine on 10/27/2015.
  */
-public class MasterTeleOp extends OpMode {
+public class MasterTeleOpRed extends OpMode {
 
     DcMotor motorRight;
     DcMotor motorLeft;
     DcMotor motor3Dwheel;
     DcMotor motorHook;
 
-    Servo climberBlue;
-    //Servo climberRed;
+    //Servo climberBlue;
+    Servo redBucket;
+    Servo blueBucket;
+    Servo climberRed;
     Servo hook;
+    Servo blueGrabber;
+    Servo redGrabber;
     boolean wasButtonPressed;
     int hookEncoder;
     double armLeftAt;
     double hookPower;
+    double encoderZero;
     /**
      * Constructor
      */
-    public MasterTeleOp() {
+    public MasterTeleOpRed() {
 
     }
 
@@ -37,19 +42,24 @@ public class MasterTeleOp extends OpMode {
     public void init() {
 
 
-		//this is where we define all of the motors on the robot.
+        //this is where we define all of the motors on the robot.
         motorRight = hardwareMap.dcMotor.get("motor_2");
         motorLeft = hardwareMap.dcMotor.get("motor_1");
         motor3Dwheel = hardwareMap.dcMotor.get("motor_3");
         motorHook = hardwareMap.dcMotor.get("motor_4");
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
         //this is where we define the servos
-        //climberRed = hardwareMap.servo.get("servo_6");
-        climberBlue= hardwareMap.servo.get("servo_1");
-        hook= hardwareMap.servo.get("servo_5");
+        climberRed = hardwareMap.servo.get("servo_1");
+        blueBucket = hardwareMap.servo.get("servo_2");
+        redBucket = hardwareMap.servo.get("servo_3");
+        blueGrabber = hardwareMap.servo.get("servo_4");
+        redGrabber = hardwareMap.servo.get("servo_5");
+        //climberBlue= hardwareMap.servo.get("servo_1");
+        hook= hardwareMap.servo.get("servo_6");
         //we set this servo into its correct starting position.
         //climberBlue.setPosition(1);
         hookEncoder=motorHook.getCurrentPosition();
+        encoderZero = motorHook.getCurrentPosition();
     }
 
 
@@ -104,8 +114,13 @@ public class MasterTeleOp extends OpMode {
         } else {
             hook.setPosition(.5);
         }
-        double encoderZero = motorHook.getCurrentPosition();
-        double armAngle = ((motorHook.getCurrentPosition()-encoderZero)/3.111)+30;
+
+        if(gamepad2.b){
+            climberRed.setPosition(0.995);
+        }else if(gamepad2.a){
+            climberRed.setPosition(0.005);
+        }
+  /*      double armAngle = ((motorHook.getCurrentPosition()-encoderZero)/3.111)+30;
         if(armAngle>90){
             if(wasButtonPressed=false) {
                 if(armLeftAt > armAngle) {
@@ -114,25 +129,31 @@ public class MasterTeleOp extends OpMode {
                     hookPower = hookPower-.1;
                 }
             }
-        }
+        }*/
         if (gamepad2.dpad_up) {
-            motorHook.setPower(-.25);
-            wasButtonPressed = true;
-            armLeftAt = armAngle;
+            motorHook.setPower(-.3);
+            //  wasButtonPressed = true;
+            //  armLeftAt = armAngle;
         } else if (gamepad2.dpad_down) {
-            motorHook.setPower(.2);
-            wasButtonPressed = true;
-            armLeftAt = armAngle;
+            motorHook.setPower(.3);
+            //   wasButtonPressed = true;
+            //   armLeftAt = armAngle;
         } else {
-            wasButtonPressed=false;
-        }
+            motorHook.setPower(0);
+        }//else {
+        // wasButtonPressed=false;
+        // }
         int x = 666;
         if(gamepad1.y) {
             telemetry.addData("jeff", x);
         }
-        }
+        //  telemetry.addData("armAngle: ", armAngle);
+        telemetry.addData("motorHookEncoder: ", motorHook.getCurrentPosition());
+        telemetry.addData("encoderZero: ", encoderZero);
+        telemetry.addData("hookPower: ", hookPower);
+    }
 
-        //this sends information to the driver
+    //this sends information to the driver
         /*telemetry.addData("Text", "*** Robot Data***");
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));

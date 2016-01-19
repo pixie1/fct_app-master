@@ -36,37 +36,66 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * A simple example of a linear op mode that will approach an IR beacon
  */
 public class MasterGyroAutonomous extends LinearOpMode {
 
-    final static double MOTOR_POWER = 0.15; // Higher values will cause the robot to move faster
-    final static double HOLD_IR_SIGNAL_STRENGTH = 0.20; // Higher values will cause the robot to follow closer
-    GyroSensor sensorGyro;
+    //final static double MOTOR_POWER = 0.15; // Higher values will cause the robot to move faster
+    //final static double HOLD_IR_SIGNAL_STRENGTH = 0.20; // Higher values will cause the robot to follow closer
     DcMotor motorRight;
     DcMotor motorLeft;
+    //Servo servo1;
+    //Servo servo2;
+    ModernRoboticsI2cGyro sensorGyro;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
-        sensorGyro.calibrate();                motorRight = hardwareMap.dcMotor.get("motor_2");
-        wait(100);
-                                        motorLeft
-        .setDirection(DcMotor.Direction.REVERSE);//makes the robot run straight.
-        ModernRoboticsI2cGyro sensorGyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
-        // wait for fcs to start the match
+        sensorGyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
+        motorRight = hardwareMap.dcMotor.get("motor_2");
+        motorLeft = hardwareMap.dcMotor.get("motor_1");
+        //servo1 = hardwareMap.servo.get("servo_1");
+        //servo2 = hardwareMap.servo.get("servo_5");
+        motorLeft.setDirection(DcMotor.Direction.REVERSE);//makes the robot run straight.
+        sensorGyro.calibrate();
+        Thread.sleep(100);
+
         waitForStart();
-        turn(90, .5);
-        turn(270, .1);
-        turn(0, 1);
+        gyroTurn(45, .4);
+        Thread.sleep(2000);
+        gyroTurn(90, .8);
+        while(true) {
+            telemetry.addData("heading", sensorGyro.getHeading());
+            telemetry.addData("integratedZValue", sensorGyro.getIntegratedZValue());
+        }
     }
 
     void gyroTurn(int degrees, double speed) {
+        //if(degrees<0){
+            while(sensorGyro.getHeading()<degrees){
+                motorLeft.setPower(speed);
+                motorRight.setPower(-speed);
+                telemetry.addData("heading:", sensorGyro.getHeading());
+                telemetry.addData("speed:", speed);
+                telemetry.addData("degrees:", degrees);
+              // telemetry.addData("getRotation", sensorGyro.getRotation());
+            }
 
+        /*}else if(degrees>0){
+            while(sensorGyro.getHeading()>-degrees){
+                motorLeft.setPower(-speed);
+                motorRight.setPower(speed);
+            }*/
+        //}
+        motorLeft.setPower(0);
+        motorRight.setPower(0);
     }
 
-    int angleToEncoderTicks(double turnAmount) {
+
+    /*int angleToEncoderTicks(double turnAmount) {
         double s = ((turnAmount) / 360 * (2 * Math.PI)) * (17.51 / 2);
         double cir = 5 * Math.PI;
         double numOfRotations = s / cir;
@@ -130,7 +159,7 @@ public class MasterGyroAutonomous extends LinearOpMode {
         motorLeft.setPower(0);
         motorRight.setPower(0);
         motorLeft.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        motorRight.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);*/
+        motorRight.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
         }
-    }
+    }*/
 }
