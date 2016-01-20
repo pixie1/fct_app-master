@@ -30,9 +30,7 @@ public class MasterTeleOpRed extends OpMode {
      * Constructor
      */
     public MasterTeleOpRed() {
-
     }
-
     /*
      * Code to run when the op mode is first enabled goes here
      *
@@ -56,12 +54,13 @@ public class MasterTeleOpRed extends OpMode {
         redGrabber = hardwareMap.servo.get("servo_5");
         //climberBlue= hardwareMap.servo.get("servo_1");
         hook= hardwareMap.servo.get("servo_6");
-        //we set this servo into its correct starting position.
-        //climberBlue.setPosition(1);
         hookEncoder=motorHook.getCurrentPosition();
         encoderZero = motorHook.getCurrentPosition();
+        blueBucket.setPosition(0.6);
+        redBucket.setPosition(0.8);
+        climberRed.setPosition(0.005);
+        //climberBlue.setPosition(0.995);
     }
-
 
     /*
      * This method will be called repeatedly in a loop
@@ -114,22 +113,30 @@ public class MasterTeleOpRed extends OpMode {
         } else {
             hook.setPosition(.5);
         }
-
-        if(gamepad2.b){
-            climberRed.setPosition(0.995);
-        }else if(gamepad2.a){
-            climberRed.setPosition(0.005);
+        if(gamepad2.left_trigger>0){
+            blueBucket.setPosition(0.6);
+        }else if(gamepad2.right_trigger>0){
+            blueBucket.setPosition(0.8);
+        }
+        if(gamepad2.left_bumper){
+            redBucket.setPosition(0.8);
+        }else if(gamepad2.right_bumper){
+            redBucket.setPosition(0.6);
         }
   /*      double armAngle = ((motorHook.getCurrentPosition()-encoderZero)/3.111)+30;
         if(armAngle>90){
             if(wasButtonPressed=false) {
                 if(armLeftAt > armAngle) {
                     hookPower = hookPower+.1;
-                }else if(armLeftAt<armAngle){
-                    hookPower = hookPower-.1;
+                }else if(armLeftAt<armAngle){                    hookPower = hookPower-.1;
                 }
             }
         }*/
+        if(gamepad2.x) {
+            climberRed.setPosition(0.8);
+        }else if(gamepad2.b){
+            climberRed.setPosition(0.005);
+        }
         if (gamepad2.dpad_up) {
             motorHook.setPower(-.3);
             //  wasButtonPressed = true;
@@ -152,13 +159,11 @@ public class MasterTeleOpRed extends OpMode {
         telemetry.addData("encoderZero: ", encoderZero);
         telemetry.addData("hookPower: ", hookPower);
     }
-
     //this sends information to the driver
         /*telemetry.addData("Text", "*** Robot Data***");
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
 */
-
 
     /*
      * Code to run when the op mode is first disabled goes here
@@ -167,10 +172,6 @@ public class MasterTeleOpRed extends OpMode {
      */
     @Override
     public void stop() {
-
     }
-
-
-
 }
 

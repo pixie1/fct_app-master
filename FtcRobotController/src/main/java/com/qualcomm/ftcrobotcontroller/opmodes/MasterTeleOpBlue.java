@@ -30,9 +30,7 @@ public class MasterTeleOpBlue extends OpMode {
      * Constructor
      */
     public MasterTeleOpBlue() {
-
     }
-
     /*
      * Code to run when the op mode is first enabled goes here
      *
@@ -58,10 +56,10 @@ public class MasterTeleOpBlue extends OpMode {
         hook= hardwareMap.servo.get("servo_6");
         hookEncoder=motorHook.getCurrentPosition();
         encoderZero = motorHook.getCurrentPosition();
-        blueBucket.setPosition(0.8);
+        blueBucket.setPosition(0.6);
         redBucket.setPosition(0.8);
+        climberBlue.setPosition(0.995);
     }
-
 
     /*
      * This method will be called repeatedly in a loop
@@ -115,9 +113,9 @@ public class MasterTeleOpBlue extends OpMode {
             hook.setPosition(.5);
         }
         if(gamepad2.left_trigger>0){
-            blueBucket.setPosition(0.8);
+            blueBucket.setPosition(0.6);
         }else if(gamepad2.right_trigger>0){
-            blueBucket.setPosition(0.7);
+            blueBucket.setPosition(0.8);
         }
         if(gamepad2.left_bumper){
             redBucket.setPosition(0.8);
@@ -130,14 +128,13 @@ public class MasterTeleOpBlue extends OpMode {
                 if(armLeftAt > armAngle) {
                     hookPower = hookPower+.1;
                 }else if(armLeftAt<armAngle){                    hookPower = hookPower-.1;
-
                 }
             }
         }*/
         if(gamepad2.x) {
-            climberBlue.setPosition(0.8);
+            climberBlue.setPosition(0.2);
         }else if(gamepad2.b){
-            climberBlue.setPosition(0.005);
+            climberBlue.setPosition(0.995);
         }
         if (gamepad2.dpad_up) {
             motorHook.setPower(-.3);
@@ -161,13 +158,11 @@ public class MasterTeleOpBlue extends OpMode {
         telemetry.addData("encoderZero: ", encoderZero);
         telemetry.addData("hookPower: ", hookPower);
         }
-
         //this sends information to the driver
         /*telemetry.addData("Text", "*** Robot Data***");
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
 */
-
 
     /*
      * Code to run when the op mode is first disabled goes here
@@ -176,10 +171,6 @@ public class MasterTeleOpBlue extends OpMode {
      */
     @Override
     public void stop() {
-
     }
-
-
-
 }
 
