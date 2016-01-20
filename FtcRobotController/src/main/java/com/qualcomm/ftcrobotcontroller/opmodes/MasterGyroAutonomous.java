@@ -61,16 +61,33 @@ public class MasterGyroAutonomous extends LinearOpMode {
         //servo2 = hardwareMap.servo.get("servo_5");
         motorLeft.setDirection(DcMotor.Direction.REVERSE);//makes the robot run straight.
         sensorGyro.calibrate();
-        Thread.sleep(100);
+        while(sensorGyro.isCalibrating()){
+            Thread.sleep(200);
+        }
 
         waitForStart();
-        gyroTurn(45, .4);
-        Thread.sleep(2000);
-        gyroTurn(90, .8);
+        turnToHeading(90, .5);
         while(true) {
             telemetry.addData("heading", sensorGyro.getHeading());
             telemetry.addData("integratedZValue", sensorGyro.getIntegratedZValue());
         }
+    }
+
+    void turnToHeading(int heading, double speed){
+        while(sensorGyro.getHeading()<heading){
+            motorLeft.setPower(-speed);
+            motorRight.setPower(speed);
+            telemetry.addData("heading", sensorGyro.getHeading());
+            telemetry.addData("integratedZValue", sensorGyro.getIntegratedZValue());
+            telemetry.addData("Input Heading", heading);
+            telemetry.addData("speed", speed);
+        }
+        stopMotors();
+    }
+
+    void stopMotors(){
+        motorLeft.setPower(0);
+        motorRight.setPower(0);
     }
 
     void gyroTurn(int degrees, double speed) {
