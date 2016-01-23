@@ -58,6 +58,8 @@ public class MasterTeleOpBlue extends OpMode {
         encoderZero = motorHook.getCurrentPosition();
         blueBucket.setPosition(0.6);
         redBucket.setPosition(0.8);
+        redGrabber.setPosition(.5);
+        hook.setPosition(.5);
         climberBlue.setPosition(0.995);
     }
 
@@ -130,18 +132,30 @@ public class MasterTeleOpBlue extends OpMode {
                 }else if(armLeftAt<armAngle){                    hookPower = hookPower-.1;
                 }
             }
-        }*/
+        }*////
         if(gamepad2.x) {
             climberBlue.setPosition(0.2);
         }else if(gamepad2.b){
             climberBlue.setPosition(0.995);
         }
+        if(gamepad2.dpad_left){
+            blueGrabber.setPosition(.995);
+        }else if(gamepad2.dpad_right){
+            blueGrabber.setPosition(.005);
+        }else{
+            blueGrabber.setPosition(.5);
+        }
+        if(gamepad2.a){
+            redGrabber.setPosition(.005);
+        }else if(gamepad2.y){
+            redGrabber.setPosition(.995);
+        }
         if (gamepad2.dpad_up) {
-            motorHook.setPower(-.3);
+            motorHook.setPower(-.4);
           //  wasButtonPressed = true;
           //  armLeftAt = armAngle;
         } else if (gamepad2.dpad_down) {
-            motorHook.setPower(.3);
+            motorHook.setPower(.4);
          //   wasButtonPressed = true;
          //   armLeftAt = armAngle;
         } else {
@@ -149,14 +163,7 @@ public class MasterTeleOpBlue extends OpMode {
         }//else {
            // wasButtonPressed=false;
        // }
-        int x = 666;
-        if(gamepad1.y) {
-            telemetry.addData("jeff", x);
-        }
-      //  telemetry.addData("armAngle: ", armAngle);
-        telemetry.addData("motorHookEncoder: ", motorHook.getCurrentPosition());
-        telemetry.addData("encoderZero: ", encoderZero);
-        telemetry.addData("hookPower: ", hookPower);
+
         }
         //this sends information to the driver
         /*telemetry.addData("Text", "*** Robot Data***");

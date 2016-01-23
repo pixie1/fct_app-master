@@ -58,6 +58,8 @@ public class MasterTeleOpRed extends OpMode {
         encoderZero = motorHook.getCurrentPosition();
         blueBucket.setPosition(0.6);
         redBucket.setPosition(0.8);
+        redGrabber.setPosition(.5);
+        hook.setPosition(.5);
         climberRed.setPosition(0.005);
         //climberBlue.setPosition(0.995);
     }
@@ -113,6 +115,13 @@ public class MasterTeleOpRed extends OpMode {
         } else {
             hook.setPosition(.5);
         }
+        if(gamepad2.dpad_left){
+            blueGrabber.setPosition(.995);
+        }else if(gamepad2.dpad_right){
+            blueGrabber.setPosition(.005);
+        }else{
+            blueGrabber.setPosition(.5);
+        }
         if(gamepad2.left_trigger>0){
             blueBucket.setPosition(0.6);
         }else if(gamepad2.right_trigger>0){
@@ -154,7 +163,7 @@ public class MasterTeleOpRed extends OpMode {
         if(gamepad1.y) {
             telemetry.addData("jeff", x);
         }
-        //  telemetry.addData("armAngle: ", armAngle);
+        //  telemetry.addData("armAngle: ", amAngle);
         telemetry.addData("motorHookEncoder: ", motorHook.getCurrentPosition());
         telemetry.addData("encoderZero: ", encoderZero);
         telemetry.addData("hookPower: ", hookPower);
