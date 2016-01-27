@@ -47,6 +47,7 @@ public class MasterGyroAutonomous extends LinearOpMode {
     //final static double HOLD_IR_SIGNAL_STRENGTH = 0.20; // Higher values will cause the robot to follow closer
     DcMotor motorRight;
     DcMotor motorLeft;
+    double gyroZero;
     //Servo servo1;
     //Servo servo2;
     ModernRoboticsI2cGyro sensorGyro;
@@ -64,13 +65,35 @@ public class MasterGyroAutonomous extends LinearOpMode {
         while(sensorGyro.isCalibrating()){
             Thread.sleep(200);
         }
-
+        gyroZero = sensorGyro.getIntegratedZValue();
         waitForStart();
-        turnToHeading(90, .5);
-        while(true) {
-            telemetry.addData("heading", sensorGyro.getHeading());
-            telemetry.addData("integratedZValue", sensorGyro.getIntegratedZValue());
+        turnDegrees(1, -90);
+        stopMotors();
+        turnDegrees(1, 90);
+        stopMotors();
+    }
+
+    void turnDegrees(double speed, int angle){
+        gyroZero = sensorGyro.getIntegratedZValue();
+        if(angle>0){
+            while(sensorGyro.getIntegratedZValue()<angle+gyroZero) {
+                motorLeft.setPower(speed);
+                motorRight.setPower(-speed);
+                telemetry.addData("IZV", sensorGyro.getIntegratedZValue());
+                telemetry.addData("speed", speed);
+                telemetry.addData("angle", angle);
+            }
+        }else if(angle<0) {
+            while (Math.abs(sensorGyro.getIntegratedZValue())<Math.abs(angle+gyroZero)) {
+                motorLeft.setPower(-speed);
+                motorRight.setPower(speed);
+                telemetry.addData("IZV", sensorGyro.getIntegratedZValue());
+                telemetry.addData("speed", speed);
+                telemetry.addData("angle", angle);
+            }
         }
+        motorLeft.setPower(0);
+        motorRight.setPower(0);
     }
 
     void turnToHeading(int heading, double speed){
