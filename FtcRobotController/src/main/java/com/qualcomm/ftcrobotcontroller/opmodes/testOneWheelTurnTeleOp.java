@@ -5,41 +5,41 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
- * Created by Karine on 10/27/2015.
+ * Created by Karine on 2/2/2016.
  */
-public class MasterTeleOpBlue extends OpMode {
+public class testOneWheelTurnTeleOp extends OpMode
 
-    DcMotor motorRight;
-    DcMotor motorLeft;
-    DcMotor motor3Dwheel;
-    DcMotor motorHook;
+    {
 
-    Servo climberBlue;
-    Servo redBucket;
-    Servo blueBucket;
-    //Servo climberRed;
-    Servo hook;
-    Servo blueDebrisPickup;
-    Servo redDebrisPickup;
-    boolean wasButtonPressed;
-    int hookEncoder;
-    double armLeftAt;
-    double hookPower;
-    double encoderZero;
-    boolean isBlueDropperDown;
-    int countBlueDebrisPickUp=0;
-    /**
-     * Constructor
-     */
-    public MasterTeleOpBlue() {
+        DcMotor motorRight;
+        DcMotor motorLeft;
+        DcMotor motor3Dwheel;
+        DcMotor motorHook;
+
+        Servo climberBlue;
+        Servo redBucket;
+        Servo blueBucket;
+        //Servo climberRed;
+        Servo hook;
+        Servo blueGrabber;
+        Servo redGrabber;
+        boolean wasButtonPressed;
+        int hookEncoder;
+        double armLeftAt;
+        double hookPower;
+        double encoderZero;
+        /**
+         * Constructor
+         */
+        public testOneWheelTurnTeleOp() {
     }
     /*
      * Code to run when the op mode is first enabled goes here
      *
      * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
      */
-    @Override
-    public void init() {
+        @Override
+        public void init() {
 
 
         //this is where we define all of the motors on the robot.
@@ -52,15 +52,15 @@ public class MasterTeleOpBlue extends OpMode {
         //climberRed = hardwareMap.servo.get("servo_1");
         blueBucket = hardwareMap.servo.get("servo_2");
         redBucket = hardwareMap.servo.get("servo_3");
-        blueDebrisPickup = hardwareMap.servo.get("servo_4");
-        redDebrisPickup = hardwareMap.servo.get("servo_5");
+        blueGrabber = hardwareMap.servo.get("servo_4");
+        redGrabber = hardwareMap.servo.get("servo_5");
         climberBlue= hardwareMap.servo.get("servo_1");
         hook= hardwareMap.servo.get("servo_6");
         hookEncoder=motorHook.getCurrentPosition();
         encoderZero = motorHook.getCurrentPosition();
         blueBucket.setPosition(0.6);
         redBucket.setPosition(0.8);
-        redDebrisPickup.setPosition(.5);
+        redGrabber.setPosition(.5);
         hook.setPosition(.5);
         climberBlue.setPosition(0.995);
     }
@@ -70,8 +70,8 @@ public class MasterTeleOpBlue extends OpMode {
      *
      * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#run()
      */
-    @Override
-    public void loop() {
+        @Override
+        public void loop() {
         //driver#1's controls
         if (gamepad1.y) {                        //this makes it go forward fasr
             motorLeft.setPower(1);
@@ -86,17 +86,17 @@ public class MasterTeleOpBlue extends OpMode {
             motorLeft.setPower(-.2);
             motorRight.setPower(-.2);
         } else if (gamepad1.left_bumper) {         //this makes it turn cc fast
-            motorLeft.setPower(-1);
+            motorLeft.setPower(0);
             motorRight.setPower(1);
         } else if (gamepad1.right_bumper) {        //this makes it turn c fast
             motorLeft.setPower(1);
-            motorRight.setPower(-1);
+            motorRight.setPower(0);
         } else if (gamepad1.left_trigger > 0) {      // this makes it turn cc slow
-            motorLeft.setPower(-.2);
-            motorRight.setPower(.2);
+            motorLeft.setPower(0);
+            motorRight.setPower(.5);
         } else if (gamepad1.right_trigger > 0) {     //this makes it turn c slow
-            motorLeft.setPower(.2);
-            motorRight.setPower(-.2);
+            motorLeft.setPower(.5);
+            motorRight.setPower(0);
         } else {
             motorRight.setPower(0);
             motorLeft.setPower(0);
@@ -116,12 +116,10 @@ public class MasterTeleOpBlue extends OpMode {
         } else {
             hook.setPosition(.5);
         }
-        if(gamepad2.dpad_left) {
-            if (isBlueDropperDown) {
-                blueBucket.setPosition(0.6);
-            } else {
-                blueBucket.setPosition(0.8);
-            }
+        if(gamepad2.left_trigger>0){
+            blueBucket.setPosition(0.6);
+        }else if(gamepad2.right_trigger>0){
+            blueBucket.setPosition(0.8);
         }
         if(gamepad2.left_bumper){
             redBucket.setPosition(0.8);
@@ -137,55 +135,38 @@ public class MasterTeleOpBlue extends OpMode {
                 }
             }
         }*////
-        if(gamepad2.left_bumper) {
+        if(gamepad2.x) {
             climberBlue.setPosition(0.2);
-        }else if(gamepad2.left_bumper){
+        }else if(gamepad2.b){
             climberBlue.setPosition(0.995);
         }
-        telemetry.addData("left_stick_Y",gamepad2.left_stick_y);
-        telemetry.addData("right_stick_Y", gamepad2.right_stick_y);
-
-        if(gamepad2.left_stick_y>.2){
-            blueDebrisPickup.setPosition(0.995);
-        }else if(gamepad2.left_stick_y<-.2){
-            blueDebrisPickup.setPosition(0.005);
-        }else{
-            blueDebrisPickup.setPosition(.5);
-        }
-        if(gamepad2.right_stick_y>.2){
-            redDebrisPickup.setPosition(0.995);
-        }else if(gamepad2.right_stick_y<-.2){
-            redDebrisPickup.setPosition(0.005);
-        }else {
-            redDebrisPickup.setPosition(.5);
-        }
-        /*if(gamepad2.dpad_left){
-            bluedebrispickup.setPosition(.995);
+        if(gamepad2.dpad_left){
+            blueGrabber.setPosition(.995);
         }else if(gamepad2.dpad_right){
-            bluedebrispickup.setPosition(.005);
+            blueGrabber.setPosition(.005);
         }else{
-            bluedebrispickup.setPosition(.5);
-        }*/
-//        if(gamepad2.a){
-//            redDebrisPickup.setPosition(.005);
-//        }else if(gamepad2.y){
-//            redDebrisPickup.setPosition(.995);
-//        }
+            blueGrabber.setPosition(.5);
+        }
+        if(gamepad2.a){
+            redGrabber.setPosition(.005);
+        }else if(gamepad2.y){
+            redGrabber.setPosition(.995);
+        }
         if (gamepad2.dpad_up) {
             motorHook.setPower(-.4);
-          //  wasButtonPressed = true;
-          //  armLeftAt = armAngle;
+            //  wasButtonPressed = true;
+            //  armLeftAt = armAngle;
         } else if (gamepad2.dpad_down) {
             motorHook.setPower(.4);
-         //   wasButtonPressed = true;
-         //   armLeftAt = armAngle;
+            //   wasButtonPressed = true;
+            //   armLeftAt = armAngle;
         } else {
             motorHook.setPower(0);
         }//else {
-           // wasButtonPressed=false;
-       // }
+        // wasButtonPressed=false;
+        // }
 
-        }
+    }
         //this sends information to the driver
         /*telemetry.addData("Text", "*** Robot Data***");
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
@@ -197,8 +178,10 @@ public class MasterTeleOpBlue extends OpMode {
      *
      * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#stop()
      */
-    @Override
-    public void stop() {
+        @Override
+        public void stop() {
     }
-}
 
+
+
+}

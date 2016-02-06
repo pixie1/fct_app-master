@@ -76,7 +76,7 @@ public class MasterGyroAutonomous extends LinearOpMode {
     void turnDegrees(double speed, int angle){
         gyroZero = sensorGyro.getIntegratedZValue();
         if(angle>0){
-            while(sensorGyro.getIntegratedZValue()<angle+gyroZero) {
+            while(sensorGyro.getIntegratedZValue()<angle) {
                 motorLeft.setPower(speed);
                 motorRight.setPower(-speed);
                 telemetry.addData("IZV", sensorGyro.getIntegratedZValue());
@@ -84,7 +84,7 @@ public class MasterGyroAutonomous extends LinearOpMode {
                 telemetry.addData("angle", angle);
             }
         }else if(angle<0) {
-            while (Math.abs(sensorGyro.getIntegratedZValue())<Math.abs(angle+gyroZero)) {
+            while (Math.abs(sensorGyro.getIntegratedZValue())<Math.abs(angle)) {
                 motorLeft.setPower(-speed);
                 motorRight.setPower(speed);
                 telemetry.addData("IZV", sensorGyro.getIntegratedZValue());
