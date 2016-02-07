@@ -26,7 +26,9 @@ public class MasterTeleOpBlue extends OpMode {
     double armLeftAt;
     double hookPower;
     double encoderZero;
-    boolean isBlueDropperDown;
+    boolean isBlueDropperDown=true;
+    boolean isRedDropperDown=true;
+    boolean isClimberDown=true;
     int countBlueDebrisPickUp=0;
     /**
      * Constructor
@@ -61,6 +63,7 @@ public class MasterTeleOpBlue extends OpMode {
         blueBucket.setPosition(0.6);
         redBucket.setPosition(0.8);
         redDebrisPickup.setPosition(.5);
+        blueDebrisPickup.setPosition(0.5);
         hook.setPosition(.5);
         climberBlue.setPosition(0.995);
     }
@@ -80,11 +83,11 @@ public class MasterTeleOpBlue extends OpMode {
             motorLeft.setPower(-1);
             motorRight.setPower(-1);
         } else if (gamepad1.x) {                   //this makes it go forward slow
-            motorLeft.setPower(.2);
-            motorRight.setPower(.2);
+            motorLeft.setPower(.5);
+            motorRight.setPower(.5);
         } else if (gamepad1.b) {                   //this makes it go backwards slow
-            motorLeft.setPower(-.2);
-            motorRight.setPower(-.2);
+            motorLeft.setPower(-.5);
+            motorRight.setPower(-.5);
         } else if (gamepad1.left_bumper) {         //this makes it turn cc fast
             motorLeft.setPower(-1);
             motorRight.setPower(1);
@@ -92,11 +95,11 @@ public class MasterTeleOpBlue extends OpMode {
             motorLeft.setPower(1);
             motorRight.setPower(-1);
         } else if (gamepad1.left_trigger > 0) {      // this makes it turn cc slow
-            motorLeft.setPower(-.2);
-            motorRight.setPower(.2);
+            motorLeft.setPower(-.5);
+            motorRight.setPower(.5);
         } else if (gamepad1.right_trigger > 0) {     //this makes it turn c slow
-            motorLeft.setPower(.2);
-            motorRight.setPower(-.2);
+            motorLeft.setPower(.5);
+            motorRight.setPower(-.5);
         } else {
             motorRight.setPower(0);
             motorLeft.setPower(0);
@@ -109,24 +112,43 @@ public class MasterTeleOpBlue extends OpMode {
             motor3Dwheel.setPower(0);
         }
         //driver2s controls
-        if (gamepad2.y) {
+        if (gamepad2.y) {  //y should extend arm, A retracts arm
             hook.setPosition(0.1);
         } else if (gamepad2.a) {
             hook.setPosition(0.9);
         } else {
             hook.setPosition(.5);
         }
-        if(gamepad2.dpad_left) {
-            if (isBlueDropperDown) {
+        if(gamepad2.dpad_left) { //drop bucket on blue side
+            if (!isBlueDropperDown) {
                 blueBucket.setPosition(0.6);
+                isBlueDropperDown=true;
             } else {
                 blueBucket.setPosition(0.8);
+                isBlueDropperDown=false;
+            }
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
-        if(gamepad2.left_bumper){
-            redBucket.setPosition(0.8);
-        }else if(gamepad2.right_bumper){
-            redBucket.setPosition(0.6);
+        if(gamepad2.b){//drop bucket on red side
+            if (!isRedDropperDown) {
+                redBucket.setPosition(0.8);
+                isRedDropperDown=true;
+
+            }
+            else {
+                redBucket.setPosition(0.6);
+                isRedDropperDown=false;
+
+            }
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
   /*      double armAngle = ((motorHook.getCurrentPosition()-encoderZero)/3.111)+30;
         if(armAngle>90){
@@ -137,40 +159,33 @@ public class MasterTeleOpBlue extends OpMode {
                 }
             }
         }*////
-        if(gamepad2.left_bumper) {
-            climberBlue.setPosition(0.2);
-        }else if(gamepad2.left_bumper){
-            climberBlue.setPosition(0.995);
+        if(gamepad2.left_bumper) {//blue climber
+            if (isClimberDown==true) {
+                climberBlue.setPosition(0.2);
+                isClimberDown=false;
+            } else {
+                climberBlue.setPosition(0.995);
+                isClimberDown=true;
+            }
         }
         telemetry.addData("left_stick_Y",gamepad2.left_stick_y);
         telemetry.addData("right_stick_Y", gamepad2.right_stick_y);
 
-        if(gamepad2.left_stick_y>.2){
+        if(gamepad2.right_stick_y>.2){ //pick up bucket blue side
             blueDebrisPickup.setPosition(0.995);
-        }else if(gamepad2.left_stick_y<-.2){
+        }else if(gamepad2.right_stick_y<-.2){
             blueDebrisPickup.setPosition(0.005);
         }else{
             blueDebrisPickup.setPosition(.5);
         }
-        if(gamepad2.right_stick_y>.2){
+        if(gamepad2.left_stick_y>.2){ //picket up bucket red side
             redDebrisPickup.setPosition(0.995);
-        }else if(gamepad2.right_stick_y<-.2){
+        }else if(gamepad2.left_stick_y<-.2){
             redDebrisPickup.setPosition(0.005);
         }else {
             redDebrisPickup.setPosition(.5);
         }
-        /*if(gamepad2.dpad_left){
-            bluedebrispickup.setPosition(.995);
-        }else if(gamepad2.dpad_right){
-            bluedebrispickup.setPosition(.005);
-        }else{
-            bluedebrispickup.setPosition(.5);
-        }*/
-//        if(gamepad2.a){
-//            redDebrisPickup.setPosition(.005);
-//        }else if(gamepad2.y){
-//            redDebrisPickup.setPosition(.995);
-//        }
+
         if (gamepad2.dpad_up) {
             motorHook.setPower(-.4);
           //  wasButtonPressed = true;
