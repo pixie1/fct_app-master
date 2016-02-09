@@ -29,7 +29,8 @@ public class MasterTeleOpBlue extends OpMode {
     boolean isBlueDropperDown=true;
     boolean isRedDropperDown=true;
     boolean isClimberDown=true;
-    int countBlueDebrisPickUp=0;
+    int countBlueDebrisPickUp=2;
+    int countRedDebrisPickUp=2;
     /**
      * Constructor
      */
@@ -172,19 +173,79 @@ public class MasterTeleOpBlue extends OpMode {
         telemetry.addData("right_stick_Y", gamepad2.right_stick_y);
 
         if(gamepad2.right_stick_y>.2){ //pick up bucket blue side
-            blueDebrisPickup.setPosition(0.995);
+           if(countBlueDebrisPickUp==0) {
+               blueDebrisPickup.setPosition(0.995);
+               countBlueDebrisPickUp++;
+           }
+            else {
+               blueDebrisPickup.setPosition(0.995);
+               countBlueDebrisPickUp=2;
+           }
+
         }else if(gamepad2.right_stick_y<-.2){
             blueDebrisPickup.setPosition(0.005);
+            countBlueDebrisPickUp=0;
         }else{
-            blueDebrisPickup.setPosition(.5);
+            if(countBlueDebrisPickUp==1){
+                blueDebrisPickup.setPosition(0.6);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                blueDebrisPickup.setPosition(0.4);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            else{
+                blueDebrisPickup.setPosition(.5);
+            }
         }
-        if(gamepad2.left_stick_y>.2){ //picket up bucket red side
+
+        if(gamepad2.left_stick_y>.2){ //pick up bucket blue side
+            if(countRedDebrisPickUp==0) {
+                redDebrisPickup.setPosition(0.995);
+                countRedDebrisPickUp++;
+            }
+            else {
+                redDebrisPickup.setPosition(0.995);
+                countRedDebrisPickUp=2;
+            }
+
+        }else if(gamepad2.left_stick_y<-.2){
+            redDebrisPickup.setPosition(0.005);
+            countRedDebrisPickUp=0;
+        }else{
+            if(countRedDebrisPickUp==1){
+
+
+                redDebrisPickup.setPosition(0.995);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                redDebrisPickup.setPosition(0.005);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            else{
+                redDebrisPickup.setPosition(.5);
+            }
+        }
+      /*  if(gamepad2.left_stick_y>.2){ //picket up bucket red side
             redDebrisPickup.setPosition(0.995);
         }else if(gamepad2.left_stick_y<-.2){
             redDebrisPickup.setPosition(0.005);
         }else {
             redDebrisPickup.setPosition(.5);
-        }
+        }*/
 
         if (gamepad2.dpad_up) {
             motorHook.setPower(-.4);
