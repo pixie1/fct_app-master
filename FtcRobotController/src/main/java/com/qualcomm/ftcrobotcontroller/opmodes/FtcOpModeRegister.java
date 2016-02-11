@@ -62,12 +62,10 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("K9Line", K9Line.class);
     manager.register ("PushBotAuto", PushBotAuto.class);
     manager.register ("PushBotManual", PushBotManual.class);
-    manager.register("MasterTeleOpRed", MasterTeleOpRed.class);
-    manager.register("MasterGyroAutonomous", MasterGyroAutonomous.class);
-    manager.register("MasterTeleOpBlue", MasterTeleOpBlue.class);
-    manager.register("testOneWheelTurnTeleOp",testOneWheelTurnTeleOp.class);
 
-    /* 
+
+
+    /*
      * Uncomment any of the following lines if you want to register an op mode.
      */
     manager.register("MR Gyro Test", MRGyroTest.class);
@@ -98,5 +96,8 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("PushBotDriveTouch", PushBotDriveTouch.java);
     //manager.register("PushBotIrSeek", PushBotIrSeek.java);
     //manager.register("PushBotSquare", PushBotSquare.java);
+
+    manager.register("teleop blue", MasterTeleOpBlue.class);
+    manager.register("teleop red", MasterTeleOpRed.class);
   }
 }
