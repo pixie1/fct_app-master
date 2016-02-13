@@ -54,7 +54,7 @@ public class MasterLinearAutonomous extends LinearOpMode {
         // wait for fcs to start the match
         waitForStart();
 
-        turnCC(90, 1);
+//        turnCC(90, 1);
     }
 
     int angleToEncoderTicks(double turnAmount)

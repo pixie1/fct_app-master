@@ -32,6 +32,7 @@ public class MasterTeleOpBlue extends OpMode {
     int countBlueDebrisPickUp=2;
     int countRedDebrisPickUp=2;
     boolean leftStickPushed=false;
+    int holdBlue=0;
 
 
     /**
@@ -204,18 +205,14 @@ public class MasterTeleOpBlue extends OpMode {
 */
         if (gamepad2.left_stick_y > .2) { //pick up bucket blue side
             leftStickPushed=false;
-            telemetry.addData("counter", blueDebrisPickup);
+            telemetry.addData("counter",countBlueDebrisPickUp);
                 blueDebrisPickup.setPosition(0.005); //goes down
                 countBlueDebrisPickUp = 0;
-            redBucket.setPosition(0.8);
-            redBucket.setPosition(0.6);
 
         } else if (gamepad2.left_stick_y < -.2) {
-            telemetry.addData("counter", blueDebrisPickup);
+            telemetry.addData("counter", countBlueDebrisPickUp);
             if (countBlueDebrisPickUp == 0 || (countBlueDebrisPickUp==1 && leftStickPushed)) {
                 blueDebrisPickup.setPosition(0.995);
-                blueBucket.setPosition(0.8);
-                blueBucket.setPosition(0.6);
                 countBlueDebrisPickUp = 1;
                 leftStickPushed=true;
             }
@@ -226,32 +223,25 @@ public class MasterTeleOpBlue extends OpMode {
             }
 
         } else {
-            telemetry.addData("counter", blueDebrisPickup);
+            telemetry.addData("counter", countBlueDebrisPickUp);
             leftStickPushed=false;
             if (countBlueDebrisPickUp == 1) {
 
-                blueDebrisPickup.setPosition(0.995);
-              redBucket.setPosition(0.8);
-                redBucket.setPosition(0.6);
-                try {
-                    Thread.sleep(100*20);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if (holdBlue<0) {
+                    blueDebrisPickup.setPosition(0.995);
+                    holdBlue++;
+                } else {
+                    holdBlue=0;
+                    blueDebrisPickup.setPosition(0.5);
                 }
-               blueDebrisPickup.setPosition(0.005);
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
             } else {
                 blueDebrisPickup.setPosition(.5);
 
             }
         }
 
-      /*  if(gamepad2.left_stick_y>.2){ //picket up bucket red side
-            redDebrisPickup.setPosition(0.995);
+      /*  if(gamepad2.left_stick_y> ion(0.995);
         }else if(gamepad2.left_stick_y<-.2){
             redDebrisPickup.setPosition(0.005);
         }else {

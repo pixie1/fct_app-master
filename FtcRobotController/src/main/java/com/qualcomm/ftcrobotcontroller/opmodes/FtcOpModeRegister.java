@@ -99,5 +99,6 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     manager.register("teleop blue", MasterTeleOpBlue.class);
     manager.register("teleop red", MasterTeleOpRed.class);
+    manager.register("AutonomousPath1Red", AutonomousPath1Red.class);
   }
 }
