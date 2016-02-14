@@ -28,14 +28,14 @@ public class AutonomousPath1Red extends LinearOpMode {
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
         hook = hardwareMap.servo.get("servo_6");
         motorHook = hardwareMap.dcMotor.get("motor_3");
-        
+
 
         sensorGyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
         sensorGyro.calibrate();
         telemetry.addData("calibrating", 0);
             Thread.sleep(5000);
         telemetry.addData("calibrated", 1);
-        encoderMoveUtil= new EncoderMoveUtil(motorLeft, motorRight, sensorGyro);
+        encoderMoveUtil= new EncoderMoveUtil(motorLeft, motorRight, sensorGyro,telemetry);
         // wait for fcs to start the match
         waitForStart();
 
@@ -58,9 +58,9 @@ public class AutonomousPath1Red extends LinearOpMode {
 //            //turn to face beacon
         int artificialZero = sensorGyro.getIntegratedZValue();
         Thread.sleep(100);
-        encoderMoveUtil.turnC(45, 0.5);
+        encoderMoveUtil.turnC(90-Math.abs(artificialZero), 0.5);
         encoderMoveUtil.stopMotors();
-        encoderMoveUtil.checkAngleC(45, artificialZero);
+        encoderMoveUtil.checkAngleC(90 - Math.abs(artificialZero), artificialZero);
         telemetry.addData("SECOND TURN DONE", 00000000);
         //back up slightly
         //find and align on line
