@@ -13,6 +13,8 @@ public class EncoderMoveUtil {
     DcMotor motorRight;
     ModernRoboticsI2cGyro sensorGyro;
     public Telemetry telemetry;
+    int counter;
+    boolean correctPos;
 
     public EncoderMoveUtil(DcMotor motorLeft, DcMotor motorRight, Telemetry telemetry){
         this.motorLeft=motorLeft;
@@ -90,7 +92,7 @@ public class EncoderMoveUtil {
             motorLeft.setPower(-speed);
             telemetry.addData("Left Encoder at:", motorLeft.getCurrentPosition());
         }
-        telemetry.addData("IZV",sensorGyro.getIntegratedZValue());
+        telemetry.addData("IZV", sensorGyro.getIntegratedZValue());
         stopMotors();
     }
 
@@ -124,35 +126,55 @@ public class EncoderMoveUtil {
         motorRight.setPower(0);
     }
 
-    public void checkAngleC(int targetAngle, int aZero) {
-        int angleDifference=  Math.abs(sensorGyro.getIntegratedZValue())-(Math.abs(aZero-targetAngle));
-        telemetry.addData("IZV", sensorGyro.getIntegratedZValue());
-        telemetry.addData("angleDifference", angleDifference);
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        if(angleDifference<-2){
-            turnC(angleDifference, 0.5);
-        }else if(angleDifference>2){
-            turnCC(angleDifference, 0.5);
+    public void checkAngleC(int targetAngle, int aZero, int threshold) {
+        counter=0;
+        correctPos=false;
+        while(counter<=threshold&&correctPos==false) {
+            int angleDifference = Math.abs(sensorGyro.getIntegratedZValue()) - (Math.abs(aZero - targetAngle));
+            telemetry.addData("IZV", sensorGyro.getIntegratedZValue());
+            telemetry.addData("angleDifference", angleDifference);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (angleDifference < -2) {
+                turnC(angleDifference, 0.5);
+                correctPos=false;
+                counter++;
+            } else if (angleDifference > 2) {
+                turnCC(angleDifference, 0.5);
+                correctPos=false;
+                counter++;
+            }else{
+                correctPos=true;
+            }
         }
     }
 
-   public  void checkAngleCC(int targetAngle, int aZero) {
-        int angleDifference=  Math.abs(sensorGyro.getIntegratedZValue())-(Math.abs(aZero+targetAngle));
-        telemetry.addData("IZV", sensorGyro.getIntegratedZValue());
-        telemetry.addData("angleDifference", angleDifference);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        if(angleDifference<-2){
-            turnCC(angleDifference, 0.5);
-        }else if(angleDifference>2){
-            turnC(angleDifference, 0.5);
+   public void checkAngleCC(int targetAngle, int aZero, int threshold) {
+        counter = 0;
+        correctPos = false;
+        while (counter <= threshold && correctPos == true) {
+            int angleDifference = Math.abs(sensorGyro.getIntegratedZValue()) - (Math.abs(aZero + targetAngle));
+            telemetry.addData("IZV", sensorGyro.getIntegratedZValue());
+            telemetry.addData("angleDifference", angleDifference);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (angleDifference < -2) {
+                turnCC(angleDifference, 0.5);
+                counter++;
+                correctPos = false;
+            } else if (angleDifference > 2) {
+                turnC(angleDifference, 0.5);
+                counter++;
+                correctPos = false;
+            } else {
+                correctPos = true;
+            }
         }
     }
 }

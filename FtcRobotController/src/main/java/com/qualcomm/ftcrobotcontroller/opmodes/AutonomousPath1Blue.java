@@ -7,9 +7,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
- * Created by Karine on 2/13/2016.
+ * Created by Karine on 2/15/2016.
  */
-public class AutonomousPath1Red extends LinearOpMode {
+public class AutonomousPath1Blue extends LinearOpMode {
 
     DcMotor motorRight;
     DcMotor motorLeft;
@@ -17,7 +17,6 @@ public class AutonomousPath1Red extends LinearOpMode {
     Servo hook;
     ModernRoboticsI2cGyro sensorGyro;
     EncoderMoveUtil encoderMoveUtil;
-
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -31,7 +30,7 @@ public class AutonomousPath1Red extends LinearOpMode {
         sensorGyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
         sensorGyro.calibrate();
         telemetry.addData("calibrating", 0);
-            Thread.sleep(5000);
+        Thread.sleep(5000);
         telemetry.addData("calibrated", 1);
         encoderMoveUtil= new EncoderMoveUtil(motorLeft, motorRight, sensorGyro,telemetry);
         // wait for fcs to start the match
@@ -42,9 +41,9 @@ public class AutonomousPath1Red extends LinearOpMode {
         encoderMoveUtil.stopMotors();
 
         //turn 45 parallel to red line
-        encoderMoveUtil.turnC(45, 0.5);
+        encoderMoveUtil.turnCC(60, 0.5);
         encoderMoveUtil.stopMotors();
-        encoderMoveUtil.checkAngleC(45, 0, 3);
+        encoderMoveUtil.checkAngleCC(45, 0, 3);
         encoderMoveUtil.stopMotors();
         telemetry.addData("FIRST TURN DONE", 0000000);
         //go straight
@@ -54,12 +53,10 @@ public class AutonomousPath1Red extends LinearOpMode {
 //            //turn to face beacon
         int artificialZero = sensorGyro.getIntegratedZValue();
         Thread.sleep(100);
-        encoderMoveUtil.turnC(90-Math.abs(artificialZero), 0.5);
+        encoderMoveUtil.turnCC((90-Math.abs(artificialZero))*1.5, 0.5);
         encoderMoveUtil.stopMotors();
-        encoderMoveUtil.checkAngleC(90 - Math.abs(artificialZero), artificialZero, 3);
+        encoderMoveUtil.checkAngleCC(90 - Math.abs(artificialZero), artificialZero, 3);
         telemetry.addData("SECOND TURN DONE", 00000000);
-
-
         //back up slightly
         //find and align on line
         //go forward till blue wheels are on line
@@ -69,4 +66,3 @@ public class AutonomousPath1Red extends LinearOpMode {
         //backup
     }
 }
-

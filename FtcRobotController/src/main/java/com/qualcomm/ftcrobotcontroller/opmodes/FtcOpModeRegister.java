@@ -101,5 +101,6 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("teleop red", MasterTeleOpRed.class);
     manager.register("AutonomousPath1Red", AutonomousPath1Red.class);
     manager.register("testAutonomousturn", testAutonomousturn.class);
+    manager.register("TryColorSensor", TryColorSensor.class);
   }
 }
