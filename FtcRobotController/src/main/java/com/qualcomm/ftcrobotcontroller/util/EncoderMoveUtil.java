@@ -114,7 +114,7 @@ public class EncoderMoveUtil {
     public void backward(double disInCm, double speed) {
         int current = motorLeft.getCurrentPosition();
         int disInEncoderTicks = cmToEncoderTicks(disInCm);
-        while (Math.abs(motorLeft.getCurrentPosition()) < disInEncoderTicks + Math.abs(current)) {
+        while (Math.abs(Math.abs(motorLeft.getCurrentPosition())-Math.abs(current)) < Math.abs(disInEncoderTicks)) {
             telemetry.addData("Centimeters:", disInCm);
             telemetry.addData("Encoder Ticks:", disInEncoderTicks);
             telemetry.addData("Left Encoder at:", motorLeft.getCurrentPosition());

@@ -16,7 +16,7 @@ public class TryColorSensor extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        ColorSensor sensorRGB;
+
 
 
             // write some device information (connection info, name and type)
@@ -24,8 +24,8 @@ public class TryColorSensor extends LinearOpMode {
             hardwareMap.logDevices();
 
             // get a reference to our ColorSensor object.
-            sensorRGB = hardwareMap.colorSensor.get("color_red");
-          // sensorRGB.setI2cAddress(42);
+            ColorSensor sensorRGB = hardwareMap.colorSensor.get("color_red");
+           sensorRGB.setI2cAddress(0x42);
             // bEnabled represents the state of the LED.
             boolean bEnabled = true;
 

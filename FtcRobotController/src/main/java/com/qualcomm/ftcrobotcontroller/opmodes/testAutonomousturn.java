@@ -36,7 +36,7 @@ public class testAutonomousturn extends LinearOpMode {
         move.turnCC(60, 0.5);
         move.stopMotors();
        Thread.sleep(5000);
-       move.checkAngleCC(30, 0);
+       move.checkAngleCC(30,0,4);
 
      //   Thread.sleep(5000);
 

@@ -26,21 +26,22 @@ public class MasterTeleOpBlue extends OpMode {
     double armLeftAt;
     double hookPower;
     double encoderZero;
-    boolean isBlueDropperDown=true;
-    boolean isRedDropperDown=true;
-    boolean isClimberDown=true;
-    int countBlueDebrisPickUp=2;
-    int countRedDebrisPickUp=2;
-    boolean leftStickPushed=false;
-    boolean rightStickPushed=false;
-    int holdBlue=0;
-    int holdRed=0;
+    boolean isBlueDropperDown = true;
+    boolean isRedDropperDown = true;
+    boolean isClimberDown = true;
+    int countBlueDebrisPickUp = 2;
+    int countRedDebrisPickUp = 2;
+    boolean leftStickPushed = false;
+    boolean rightStickPushed = false;
+    int holdBlue = 0;
+    int holdRed = 0;
 
     /**
      * Constructor
      */
     public MasterTeleOpBlue() {
     }
+
     /*
      * Code to run when the op mode is first enabled goes here
      *
@@ -53,7 +54,7 @@ public class MasterTeleOpBlue extends OpMode {
         //this is where we define all of the motors on the robot.
         motorRight = hardwareMap.dcMotor.get("motor_2");
         motorLeft = hardwareMap.dcMotor.get("motor_1");
-      //  motor3Dwheel = hardwareMap.dcMotor.get("motor_3");
+        //  motor3Dwheel = hardwareMap.dcMotor.get("motor_3");
         motorHook = hardwareMap.dcMotor.get("motor_3");
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
         //this is where we define the servos
@@ -62,13 +63,13 @@ public class MasterTeleOpBlue extends OpMode {
         redBucket = hardwareMap.servo.get("servo_3");
         blueDebrisPickup = hardwareMap.servo.get("servo_4");
         redDebrisPickup = hardwareMap.servo.get("servo_5");
-        climberBlue= hardwareMap.servo.get("servo_1");
-        hook= hardwareMap.servo.get("servo_6");
-     //   hookEncoder=motorHook.getCurrentPosition();
-     //   encoderZero = motorHook.getCurrentPosition();
+        climberBlue = hardwareMap.servo.get("servo_1");
+        hook = hardwareMap.servo.get("servo_6");
+        //   hookEncoder=motorHook.getCurrentPosition();
+        //   encoderZero = motorHook.getCurrentPosition();
         blueBucket.setPosition(0.6);
         redBucket.setPosition(0.8);
-        redDebrisPickup.setPosition(.5);
+        redDebrisPickup.setPosition(0.5);
         blueDebrisPickup.setPosition(0.5);
         hook.setPosition(.5);
         climberBlue.setPosition(0.995);
@@ -89,11 +90,11 @@ public class MasterTeleOpBlue extends OpMode {
             motorLeft.setPower(-1);
             motorRight.setPower(-1);
         } else if (gamepad1.x) {                   //this makes it go forward slow
-            motorLeft.setPower(.5);
-            motorRight.setPower(.5);
+            motorLeft.setPower(.3);
+            motorRight.setPower(.3);
         } else if (gamepad1.b) {                   //this makes it go backwards slow
-            motorLeft.setPower(-.5);
-            motorRight.setPower(-.5);
+            motorLeft.setPower(-.3);
+            motorRight.setPower(-.3);
         } else if (gamepad1.left_bumper) {         //this makes it turn cc fast
             motorLeft.setPower(-1);
             motorRight.setPower(1);
@@ -119,7 +120,7 @@ public class MasterTeleOpBlue extends OpMode {
         } else {
             hook.setPosition(.5);
         }
-        if (gamepad2.left_trigger>0) { //drop bucket on blue side
+        if (gamepad2.left_trigger > 0) { //drop bucket on blue side
             if (!isBlueDropperDown) {
                 blueBucket.setPosition(0.6);
                 isBlueDropperDown = true;
@@ -128,7 +129,7 @@ public class MasterTeleOpBlue extends OpMode {
                 isBlueDropperDown = false;
             }
             try {
-                Thread.sleep(300);
+                Thread.sleep(600);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -149,11 +150,11 @@ public class MasterTeleOpBlue extends OpMode {
                 e.printStackTrace();
             }
         }
-        if(gamepad2.dpad_down){
+        if (gamepad2.dpad_down) {
             motorHook.setPower(.4);
-        }else if(gamepad2.dpad_up){
+        } else if (gamepad2.dpad_up) {
             motorHook.setPower(-.4);
-        }else{
+        } else {
             motorHook.setPower(0);
         }
 
@@ -167,119 +168,41 @@ public class MasterTeleOpBlue extends OpMode {
             }
         }
 
-/*
-        if (gamepad2.right_stick_y > .2) { //pick up bucket blue side
-            telemetry.addData("counterleft", blueDebrisPickup);
-            if (countBlueDebrisPickUp == 0) {
-                blueDebrisPickup.setPosition(0.995);
-                countBlueDebrisPickUp=1;
 
-            } else {
-                blueDebrisPickup.setPosition(0.995);
-                countBlueDebrisPickUp = 2;
-            }
-
-        } else if (gamepad2.right_stick_y < -.2) {
-            telemetry.addData("counterleft", blueDebrisPickup);
-            blueDebrisPickup.setPosition(0.005);
-            countBlueDebrisPickUp = 0;
-        } else {
-            telemetry.addData("counterleft", blueDebrisPickup);
-            if (countBlueDebrisPickUp == 1) {
-                blueDebrisPickup.setPosition(0.995);
-           /*     try {
-                    Thread.sleep(100*20);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-              /*  blueDebrisPickup.setPosition(0.4);
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }*/
-          /*  } else {
-                blueDebrisPickup.setPosition(.5);
-            }
-        }
-*/
         if (gamepad2.left_stick_y > .2) { //pick up bucket blue side
-            leftStickPushed=false;
-            telemetry.addData("counter",countBlueDebrisPickUp);
-                blueDebrisPickup.setPosition(0.005); //goes down
-                countBlueDebrisPickUp = 0;
+            // leftStickPushed=false;
+            telemetry.addData("counter", countBlueDebrisPickUp);
+            blueDebrisPickup.setPosition(0.005); //goes down
+            //  countBlueDebrisPickUp = 0;
 
         } else if (gamepad2.left_stick_y < -.2) {
             telemetry.addData("counter", countBlueDebrisPickUp);
-            if (countBlueDebrisPickUp == 0 || (countBlueDebrisPickUp==1 && leftStickPushed)) {
-                blueDebrisPickup.setPosition(0.995);
-                countBlueDebrisPickUp = 1;
-                leftStickPushed=true;
-            }
-            if (countBlueDebrisPickUp==1 && leftStickPushed==false) {
-
-                blueDebrisPickup.setPosition(0.995);
-                countBlueDebrisPickUp = 2;
-            }
+            // if (countBlueDebrisPickUp == 0 || (countBlueDebrisPickUp==1 && leftStickPushed)) {
+            blueDebrisPickup.setPosition(0.995);
 
         } else {
-            telemetry.addData("counter", countBlueDebrisPickUp);
-            leftStickPushed=false;
-            if (countBlueDebrisPickUp == 1) {
-
-                if (holdBlue<0) {
-                    blueDebrisPickup.setPosition(0.995);
-                    holdBlue++;
-                } else {
-                    holdBlue=0;
-                    blueDebrisPickup.setPosition(0.5);
-                }
-
-            } else {
-                blueDebrisPickup.setPosition(.5);
-
-            }
+            blueDebrisPickup.setPosition(.5);
         }
 
         if (gamepad2.right_stick_y > .2) { //pick up bucket blue side
-            rightStickPushed=false;
-            telemetry.addData("counter",countRedDebrisPickUp);
-            redDebrisPickup.setPosition(0.005); //goes down
-            countRedDebrisPickUp = 0;
+            // rightStickPushed=false;
+            telemetry.addData("redSide", gamepad2.right_stick_y);
+            redDebrisPickup.setPosition(0.995); //goes down
+            // countRedDebrisPickUp = 0;
 
         } else if (gamepad2.right_stick_y < -.2) {
-            telemetry.addData("counter", countRedDebrisPickUp);
-            if (countRedDebrisPickUp == 0 || (countRedDebrisPickUp==1 && rightStickPushed)) {
-                redDebrisPickup.setPosition(0.995);
-                countRedDebrisPickUp = 1;
-                rightStickPushed=true;
-            }
-            if (countRedDebrisPickUp==1 && rightStickPushed==false) {
-
-                redDebrisPickup.setPosition(0.995);
-                countRedDebrisPickUp = 2;
-            }
+            telemetry.addData("counter", gamepad2.right_stick_y );
+            //if (countRedDebrisPickUp == 0 || (countRedDebrisPickUp==1 && rightStickPushed)) {
+            redDebrisPickup.setPosition(0.005);
 
         } else {
-            telemetry.addData("counter", countRedDebrisPickUp);
-            rightStickPushed=false;
-            if (countRedDebrisPickUp == 1) {
+            redDebrisPickup.setPosition(.5);
 
-                if (holdRed<0) {
-                    redDebrisPickup.setPosition(0.995);
-                    holdRed++;
-                } else {
-                    holdRed=0;
-                    redDebrisPickup.setPosition(0.5);
-                }
-
-            } else {
-                redDebrisPickup.setPosition(.5);
-
-            }
         }
-        }
-        //this sends information to the driver
+
+    }
+
+    //this sends information to the driver
         /*telemetry.addData("Text", "*** Robot Data***");
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));

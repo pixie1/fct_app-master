@@ -11,13 +11,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import java.util.Date;
 
 /**
- * Created by Karine on 2/13/2016.
+ * Created by Karine on 2/18/2016.
  */
-public class AutonomousPath1Red extends LinearOpMode {
-
-    //drop climbers
-    //park in beacon zone
-
+public class AutonomousRED_mountain extends LinearOpMode {
     DcMotor motorRight;
     DcMotor motorLeft;
     DcMotor motorHook;
@@ -30,9 +26,11 @@ public class AutonomousPath1Red extends LinearOpMode {
     ColorSensor sensorBlue;
     ModernRoboticsAnalogOpticalDistanceSensor ods;
 
-
     @Override
     public void runOpMode() throws InterruptedException {
+
+        //drop climber
+        //park on mountain
 
         motorLeft = hardwareMap.dcMotor.get("motor_1");
         motorRight = hardwareMap.dcMotor.get("motor_2");
@@ -51,7 +49,7 @@ public class AutonomousPath1Red extends LinearOpMode {
         sensorGyro.calibrate();
 
         telemetry.addData("calibrating", 0);
-            Thread.sleep(5000);
+        Thread.sleep(5000);
         telemetry.addData("calibrated", 1);
         encoderMoveUtil= new EncoderMoveUtil(motorLeft, motorRight, sensorGyro,telemetry);
         // wait for fcs to start the match
@@ -95,22 +93,8 @@ public class AutonomousPath1Red extends LinearOpMode {
         Thread.sleep(100);
         encoderMoveUtil.stopMotors();
         Thread.sleep(100);
-  /*      while (sensorBlue.red()==0 && sensorRed.red()==0){
-            motorLeft.setPower(-0.2);
-            motorRight.setPower(-0.2);
-        }*/
 
-        /*encoderMoveUtil.stopMotors();
-        encoderMoveUtil.forward(15,0.3);
-        *///back up slightly
-
-
-        //find and align on line
-        //go forward till blue wheels are on line
-        //extend hook
-
-        // current time
-       Long start= new Date().getTime();
+        Long start= new Date().getTime();
         Long current= new Date().getTime();
         while(current-start<3500){
             hook.setPosition(0.1);
@@ -139,10 +123,33 @@ public class AutonomousPath1Red extends LinearOpMode {
             hook.setPosition(0.5);
             telemetry.addData("pos2", motorHook.getCurrentPosition());
         }
-
         motorHook.setPower(0);
-        encoderMoveUtil.forward(20,0.3);
-       encoderMoveUtil.stopMotors();
+
+        encoderMoveUtil.backward(70, 0.3);
+        encoderMoveUtil.stopMotors();
+        Thread.sleep(100);
+        //turn to mountain
+        int artificalZero=sensorGyro.getIntegratedZValue();
+        encoderMoveUtil.turnC(145-Math.abs(artificalZero), 0.5);
+        encoderMoveUtil.stopMotors();
+        encoderMoveUtil.checkAngleC(145 - Math.abs(artificalZero), artificalZero, 5);
+        encoderMoveUtil.stopMotors();
+
+        encoderMoveUtil.forward(30, 0.5);
+        encoderMoveUtil.stopMotors();
+        Thread.sleep(100);
+        encoderMoveUtil.turnC(160 - Math.abs(artificalZero), 0.5);
+        encoderMoveUtil.stopMotors();
+        encoderMoveUtil.checkAngleC(160 - Math.abs(artificalZero), artificalZero, 5);
+        encoderMoveUtil.stopMotors();
+        artificalZero=sensorGyro.getIntegratedZValue();
+
+
+        motorLeft.setPower(-0.5);
+        motorRight.setPower(-0.5);
+        Thread.sleep(400);
+        encoderMoveUtil.stopMotors();
+
+
     }
 }
-
